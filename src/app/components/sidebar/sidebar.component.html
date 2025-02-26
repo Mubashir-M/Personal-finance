@@ -1,0 +1,86 @@
+<div class="sidebar-container">
+  <div class="sidebar-upper">
+    <div
+      class="dashboard"
+      (click)="setActive('dashboard')"
+      [ngClass]="{ active: activeDiv === 'dashboard' }"
+    >
+      <mat-icon>
+        <span class="material-symbols-outlined"> grid_view </span>
+      </mat-icon>
+      <p>Dashboard</p>
+    </div>
+    <div
+      class="breakdown"
+      (click)="setActive('breakdown')"
+      [ngClass]="{ active: activeDiv === 'breakdown' }"
+    >
+      <mat-icon>
+        <span class="material-symbols-outlined"> bar_chart_4_bars </span>
+      </mat-icon>
+      <p>Breakdown</p>
+    </div>
+    <div
+      class="transactions"
+      (click)="setActive('transactions')"
+      [ngClass]="{ active: activeDiv === 'transactions' }"
+    >
+      <mat-icon>
+        <span class="material-symbols-outlined"> credit_card </span>
+      </mat-icon>
+      <p>Transactions</p>
+    </div>
+    <div
+      class="savings"
+      (click)="setActive('savings')"
+      [ngClass]="{ active: activeDiv === 'savings' }"
+    >
+      <mat-icon>
+        <span class="material-symbols-outlined"> savings </span>
+      </mat-icon>
+      <p>Savings</p>
+    </div>
+    <div
+      class="messages"
+      (click)="setActive('messages')"
+      [ngClass]="{ active: activeDiv === 'messages' }"
+    >
+      <mat-icon>
+        <span class="material-symbols-outlined"> more_horiz </span>
+      </mat-icon>
+      <p>Messages</p>
+    </div>
+    <div
+      class="account"
+      (click)="setActive('account')"
+      [ngClass]="{ active: activeDiv === 'account' }"
+    >
+      <mat-icon>
+        <span class="material-symbols-outlined"> person </span>
+      </mat-icon>
+      <p>Accounts</p>
+    </div>
+  </div>
+  <div class="sidebar-lower">
+    <div
+      class="settings"
+      (click)="setActive('settings')"
+      [ngClass]="{ active: activeDiv === 'settings' }"
+    >
+      <mat-icon>
+        <span class="material-symbols-outlined"> settings </span>
+      </mat-icon>
+      <p>Settings</p>
+    </div>
+    <div
+      class="logout"
+      (click)="setActive('logout')"
+      [ngClass]="{ active: activeDiv === 'logout' }"
+    >
+      <mat-icon>
+        <span class="material-symbols-outlined"> logout </span>
+      </mat-icon>
+      <p>Log out</p>
+    </div>
+  </div>
+</div>
