@@ -1,7 +1,29 @@
-<div class="sidebar-container">
+<div
+  class="sidebar-container"
+  [ngClass]="{ 'sidebar-collapsed': !toggleSideBar }"
+>
   <div class="sidebar-upper">
+    <div class="sidebar-togglebtn">
+      <mat-icon (click)="menuBtnClk()">
+        <span class="material-symbols-outlined">
+          {{ toggleSideBar ? "keyboard_arrow_left" : "keyboard_arrow_right" }}
+        </span>
+      </mat-icon>
+    </div>
+
+    <div
+      class="home"
+      (click)="setActive('home')"
+      [ngClass]="{ active: activeDiv === 'home' }"
+      routerLink="/"
+    >
+      <mat-icon><span class="material-symbols-outlined"> home </span></mat-icon>
+      <p>Home</p>
+    </div>
+
     <div
       class="dashboard"
+      routerLink="/dashboard"
       (click)="setActive('dashboard')"
       [ngClass]="{ active: activeDiv === 'dashboard' }"
     >
@@ -10,6 +32,7 @@
       </mat-icon>
       <p>Dashboard</p>
     </div>
+
     <div
       class="breakdown"
       (click)="setActive('breakdown')"

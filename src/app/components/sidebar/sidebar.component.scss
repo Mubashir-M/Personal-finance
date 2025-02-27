@@ -3,6 +3,16 @@
   height: 100%;
   flex-direction: column;
   border-right: 1px solid rgba(150, 150, 150, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+.sidebar-container.sidebar-collapsed {
+  width: 60px;
+  overflow: hidden;
+}
+
+.sidebar-container.sidebar-collapsed p {
+  display: none;
 }
 
 .sidebar-upper {
@@ -10,6 +20,21 @@
   flex-direction: column;
   flex: 2;
 
+  .sidebar-togglebtn {
+    display: flex;
+    justify-content: flex-end;
+    color: rgba(150, 150, 150, 1);
+    margin: 2px 3px 0 0;
+    cursor: pointer;
+    span {
+      border-radius: 20px;
+    }
+    &:hover {
+      color: #5735d2;
+    }
+  }
+
+  .home,
   .dashboard,
   .breakdown,
   .transactions,
@@ -23,12 +48,20 @@
     cursor: pointer;
     margin-top: 1rem;
     mat-icon {
-      margin-left: 2rem;
+      margin-left: 1rem;
       color: rgba(150, 150, 150, 1);
+      transition: color 0.2s ease-in-out;
     }
     p {
       margin-left: 0.5rem;
       color: rgba(150, 150, 150, 1);
+      transition: color 0.2s ease-in-out;
+    }
+    &:hover {
+      mat-icon,
+      p {
+        color: #5735d2 !important;
+      }
     }
   }
   .active {
@@ -36,7 +69,6 @@
     p {
       color: #5735d2 !important;
     }
-    background-color: rgba(150, 150, 150, 0.1);
   }
 }
 
@@ -46,10 +78,6 @@
   flex: 1;
   justify-content: flex-end;
 
-  mat-icon {
-    margin-left: 1rem;
-    color: rgba(150, 150, 150, 1);
-  }
   .logout,
   .settings {
     display: flex;
@@ -59,17 +87,30 @@
     cursor: pointer;
     margin-left: 0.5rem;
     padding: 0.3rem 0 0.3rem 0;
-  }
-  p {
-    margin-left: 0.5rem;
-    color: rgba(150, 150, 150, 1);
-  }
 
-  .active {
+    mat-icon {
+      margin-left: 1rem;
+      color: rgba(150, 150, 150, 1);
+      transition: color 0.2s ease-in-out;
+    }
+
+    p {
+      margin-left: 0.5rem;
+      color: rgba(150, 150, 150, 1);
+      transition: color 0.2s ease-in-out;
+    }
+    &:hover {
+      mat-icon,
+      p {
+        color: #5735d2 !important;
+      }
+    }
+  }
+  .logout.active,
+  .settings.active {
     mat-icon,
     p {
       color: #5735d2 !important;
     }
-    background-color: rgba(150, 150, 150, 0.1);
   }
 }
