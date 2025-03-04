@@ -1,0 +1,10 @@
+Need to manually start:
+1. venv
+2. uvicorn
+3. posgresql
+4. alembic
+5. redis
+5. celery_worker
+
+
+Automate these

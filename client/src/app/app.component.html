@@ -1,0 +1,7 @@
+<app-header />
+<div class="body-container" [class.collapsed]="sidebarCollapsed">
+  <app-sidebar (sidebarToggle)="onSidebarToggle($event)" />
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

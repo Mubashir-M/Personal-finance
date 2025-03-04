@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+myenv/
+
+# Jupyter notebooks
+.ipynb_checkpoints
+
+# Environment variables
+.env
+
+# Pytest
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Other
+*.log
+*.db
+*.sqlite
