@@ -14,12 +14,18 @@
     />
   </div>
   <div class="user-nav-container">
-    <mat-icon>
+    <mat-icon class="notifications-icon">
       <span class="material-icons"> notifications </span>
     </mat-icon>
     <img class="avatar" src="assets/user.jpg" alt="user avatar" />
-    <mat-icon>
+    <mat-icon (click)="toggleDropDown()" class="dropdown-icon">
       <span class="material-symbols-outlined"> keyboard_arrow_down </span>
     </mat-icon>
+    <div class="dropdown-menu" *ngIf="dropdownOpen">
+      <button>Profile</button>
+      <button>Settings</button>
+      <button>Help</button>
+      <button (click)="onLogout()">Logout</button>
+    </div>
   </div>
 </div>

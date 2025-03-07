@@ -14,3 +14,4 @@ email-validator
 passlib[bcrypt]
 python-multipart
 numpy
+python-jose

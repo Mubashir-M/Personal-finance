@@ -1,7 +1,14 @@
-<app-header />
-<div class="body-container" [class.collapsed]="sidebarCollapsed">
-  <app-sidebar (sidebarToggle)="onSidebarToggle($event)" />
-  <div class="content">
-    <router-outlet></router-outlet>
+<app-auth *ngIf="!isLoggedIn" />
+<div *ngIf="isLoggedIn">
+  <app-header />
+  <div class="body-container" [class.collapsed]="sidebarCollapsed">
+    <app-sidebar (sidebarToggle)="onSidebarToggle($event)" />
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>
+<!--
+Add page loding icon for when page is refreshing.
+app.component.ts has already isLoading variable for that.
+-->

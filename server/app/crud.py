@@ -7,6 +7,7 @@ from app.ai.ai_model import predict_category
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 import joblib
+from passlib.context import CryptContext
 
 import logging
 
@@ -34,6 +35,9 @@ def create_user(db: Session, user: UserCreate):
     db.refresh(new_user)
 
     return new_user
+
+def get_user_by_email(db: Session, email: str):
+    return db.query(User).filter(User.email == email).first()
 
 def save_transactions(db: Session, transactions: list[TransactionsCreate]):
     new_transactions = [

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import pandas as pd
@@ -9,7 +9,8 @@ import app.schemas as schemas
 import app.crud as crud
 from app.tasks import process_transactions_task
 import io
-from app.utils import translate_columns, get_current_user, get_db
+from app.utils import translate_columns, get_current_user, get_db, verify_password, create_access_token
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -25,12 +26,32 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/users/", response_model=schemas.UserResponse)
+# OAuth2PasswordBearer for handling token-based authentication
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+@app.post("/users/", response_model=schemas.Token)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     try:
-        return crud.create_user(db, user)
+        db_user = crud.create_user(db, user)
+        token = create_access_token(data={"sub": db_user.email})
+        return {"token": token, "token_type":"bearer"}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/login", response_model=schemas.Token)
+def login(user: schemas.UserLogin, db : Session = Depends(get_db)):
+    # Retrieve user form database
+    db_user = crud.get_user_by_email(db, email=user.email)
+
+    if not db_user or not verify_password(user.password, db_user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail = "Incorrect username or password",
+        )
+
+    # Generate a JWT token
+    token = create_access_token(data={"sub": db_user.email})
+    return {"token": token, "token_type": "bearer"}
 
 @app.post("/upload/")
 def upload_transactions(
