@@ -3,50 +3,52 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ILoginService } from './interfaces/login.interface';
+import { ISignUpService } from './interfaces/signup.interface';
+import { ITokenService } from './interfaces/token.interface';
+import { LoginService } from './login.service';
+import { SignUpService } from './signup.service';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = environment.apiUrl;
-  private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
-  isLoggedIn$ = this.isLoggedInSubject.asObservable();
+  private isLoggedInSubject: BehaviorSubject<boolean>;
+  isLoggedIn$!: Observable<boolean>;
 
   constructor(
-    private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: any
-  ) {}
+    private loginService: LoginService,
+    private signupService: SignUpService,
+    private tokenService: TokenService
+  ) {
+    this.isLoggedInSubject = new BehaviorSubject<boolean>(
+      !!this.tokenService.getToken()
+    );
+    this.isLoggedIn$ = this.isLoggedInSubject.asObservable();
+  }
+
+  private apiUrl = environment.apiUrl;
+
+  login(credentials: { email: string; password: string }): Observable<any> {
+    return this.loginService.login(credentials);
+  }
 
   signup(userData: {
     username: string;
     email: string;
     password: string;
   }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/users/`, userData);
-  }
-
-  login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials);
+    return this.signupService.signup(userData);
   }
 
   logout() {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('token');
-    }
+    this.tokenService.logout();
     this.isLoggedInSubject.next(false);
   }
 
-  private hasToken(): boolean {
-    if (isPlatformBrowser(this.platformId)) {
-      return !!localStorage.getItem('token');
-    }
-    return false;
-  }
-
   setLoggedIn(token: string) {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('token', token);
-    }
+    this.tokenService.setLoggedIn(token);
     this.isLoggedInSubject.next(true);
   }
 }
