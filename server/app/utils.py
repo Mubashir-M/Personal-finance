@@ -2,6 +2,7 @@ from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.models import User
 from app.database import SessionLocal
+from app.schemas import UserResponse
 
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
@@ -38,8 +39,9 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)  # Default expiry of 15 minutes
-    to_encode.update({"exp": expire})
+        expire = datetime.utcnow() + timedelta(minutes=60)
+
+    to_encode.update({"user_id": data["user_id"], "exp": expire, "username": data["username"]})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -63,9 +65,24 @@ def get_db():
         db.close()
 
 def get_current_user(db: Session = Depends(get_db)):
-    # Fetch the first user from the database (for testing purposes)
+    # Fetch the first user from the database (for testing purposes), update it to fetch correct user
     user = db.query(User).first()
     if not user:
         raise HTTPException(status_code=404, detail="No user found in database")
     
     return {"id": user.id, "username": user.username}
+
+def verify_token(token: str) -> UserResponse:
+    try:
+        # Decode the token
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id = payload.get("user_id")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Invalid token")
+
+        return UserResponse(id = user_id, username = payload["username"], email=payload["sub"])
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    except Exception:
+        raise HTTPException(status_code=401, detail="Token verification failed")
+    

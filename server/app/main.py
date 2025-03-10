@@ -1,6 +1,7 @@
-from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, status
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from typing import Optional
 import pandas as pd
 from app import models
 from app.database import engine
@@ -9,7 +10,7 @@ import app.schemas as schemas
 import app.crud as crud
 from app.tasks import process_transactions_task
 import io
-from app.utils import translate_columns, get_current_user, get_db, verify_password, create_access_token
+from app.utils import translate_columns, get_current_user, get_db, verify_password, create_access_token, verify_token
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 models.Base.metadata.create_all(bind=engine)
@@ -38,6 +39,20 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.get("/expenses/monthly-total")
+def get_monthly_total(request: Request, year: int,  month: int, token: Optional[str] = None, db: Session = Depends(get_db)):
+    if token is None:
+        token = request.headers.get("Authorization").split(" ")[1]
+    user = verify_token(token)
+    return crud.get_mothly_expenses_by_user(db, user, year, month)
+
+@app.get("/expenses/monthly-categories")
+def get_monthly_categories(request: Request, year:int, month:int, token: Optional[str] = None, db: Session = Depends(get_db)):
+    if token is None:
+            token = request.headers.get("Authorization").split(" ")[1]
+    user = verify_token(token)
+    return crud.get_monthly_categorized_expenses_by_user(db, user, year, month)
+
 @app.post("/login", response_model=schemas.Token)
 def login(user: schemas.UserLogin, db : Session = Depends(get_db)):
     # Retrieve user form database
@@ -48,9 +63,8 @@ def login(user: schemas.UserLogin, db : Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail = "Incorrect username or password",
         )
-
     # Generate a JWT token
-    token = create_access_token(data={"sub": db_user.email})
+    token = create_access_token(data={"sub": db_user.email, "user_id": db_user.id, "username": db_user.username})
     return {"token": token, "token_type": "bearer"}
 
 @app.post("/upload/")

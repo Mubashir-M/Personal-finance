@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from app.models import User, Transaction, AIPrediction, Category
 from app.schemas import UserCreate, TransactionsCreate
 from passlib.context import CryptContext
@@ -8,6 +9,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 import joblib
 from passlib.context import CryptContext
+from datetime import datetime
+from fastapi.encoders import jsonable_encoder
 
 import logging
 
@@ -59,6 +62,34 @@ def save_transactions(db: Session, transactions: list[TransactionsCreate]):
 
     return [t.id for t in new_transactions]
 
+def get_mothly_expenses_by_user(db, user, year, month):
+    total_expenses = db.query(func.sum(Transaction.amount).label('total')) \
+    .filter(Transaction.user_id == user.id) \
+    .filter(func.extract('year', Transaction.date) == year) \
+    .filter(func.extract('month', Transaction.date) == month) \
+    .filter(Transaction.amount < 0) \
+    .scalar()
+    return  total_expenses if total_expenses else 0
+
+def get_monthly_categorized_expenses_by_user(db, user, year, month):
+    total_categorized_monthly_expense = db.query(
+        Transaction.category_id,
+        Category.name.label('category_name'),
+        func.sum(Transaction.amount).label('total_expenses')
+    ).join(Category, Category.id == Transaction.category_id) \
+    .filter(Transaction.user_id == user.id) \
+    .filter(func.extract('year', Transaction.date) == year) \
+    .filter(func.extract('month', Transaction.date) == month) \
+    .filter(Transaction.amount < 0) \
+    .group_by(Transaction.category_id, Category.name) \
+    .all()
+
+    # Convert the result to a list of dictionaries
+    result = [{"category_id": category_id, "category_name": category_name, "total_expenses": total_expenses}
+              for category_id, category_name, total_expenses in total_categorized_monthly_expense]
+
+
+    return jsonable_encoder(result) if result else 0
 
 def get_or_create_category(db, category_name):
     """Fetch or create a category based on AI prediction."""
@@ -90,9 +121,6 @@ def process_transactions(db, transaction_ids):
                 "Merchant": transaction.merchant,
                 "day_of_week": transaction.date.weekday()
             }
-            logger.info(f"day_of_week: {transaction_features['day_of_week']}")
-            logger.info(f"REACHED HERE: crud.py {transaction_features}")
-
 
             # Handle 'Amount' - Scaling
             # Apply the same scaling transformation that was applied during training
