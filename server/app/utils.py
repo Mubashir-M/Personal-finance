@@ -9,7 +9,12 @@ from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from typing import Union
 from dotenv import load_dotenv
+
+import pandas as pd
+from typing import List
+from . import schemas
 import os
+import io
 
 load_dotenv()
 
@@ -85,4 +90,37 @@ def verify_token(token: str) -> UserResponse:
         raise HTTPException(status_code=401, detail="Invalid token")
     except Exception:
         raise HTTPException(status_code=401, detail="Token verification failed")
+
+def process_and_save_transactions(content: str, user_id: int) -> List[schemas.TransactionsCreate]:
+    df = pd.read_csv(io.StringIO(content), sep=";")
     
+    # Rename columns
+    df = translate_columns(df)
+    
+    # Ensure required columns exist
+    required_columns = ["datetime", "Merchant", "description", "Amount"]
+    for col in required_columns:
+        if col not in df.columns:
+            raise ValueError(f"Missing required column: {col}")
+
+    # Convert 'datetime' to actual datetime and extract day_of_week
+    df["datetime"] = pd.to_datetime(df["datetime"], errors="coerce")
+    df["day_of_week"] = df["datetime"].dt.day_name()
+
+    # Convert 'Amount' column to float, replacing commas with dots
+    df["Amount"] = df["Amount"].astype(str).str.replace(",", ".").astype(float)
+    df["description"] = df["description"].fillna("No description")
+
+    # Convert CSV data to list of TransactionsCreate objects
+    transactions = [
+        schemas.TransactionsCreate(
+            amount=row["Amount"],
+            merchant=row["Merchant"],
+            description=row["description"],
+            date=row["datetime"],
+            user_id=user_id,
+        )
+        for _, row in df.iterrows()
+    ]
+    
+    return transactions

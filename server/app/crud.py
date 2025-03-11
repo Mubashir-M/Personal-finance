@@ -63,13 +63,24 @@ def save_transactions(db: Session, transactions: list[TransactionsCreate]):
     return [t.id for t in new_transactions]
 
 def get_mothly_expenses_by_user(db, user, year, month):
-    total_expenses = db.query(func.sum(Transaction.amount).label('total')) \
+    query = db.query(func.extract('year', Transaction.date).label('year'),
+                              func.extract('month', Transaction.date).label('month'),
+                              func.sum(Transaction.amount).label('total')) \
     .filter(Transaction.user_id == user.id) \
-    .filter(func.extract('year', Transaction.date) == year) \
-    .filter(func.extract('month', Transaction.date) == month) \
     .filter(Transaction.amount < 0) \
-    .scalar()
-    return  total_expenses if total_expenses else 0
+    
+    if year:
+        query = query.filter(func.extract('year', Transaction.date) == year)
+    if month:
+        query = query.filter(func.extract('month', Transaction.date) == month)
+    
+    query = query.group_by('year','month')
+    result = query.all()
+
+    result = [{"year": r.year, "month": r.month, "total": r.total} for r in result]
+    result = sorted(result, key = lambda expense: (expense["year"], expense['month']), reverse=True)
+
+    return  result if result else 0
 
 def get_monthly_categorized_expenses_by_user(db, user, year, month):
     total_categorized_monthly_expense = db.query(
@@ -133,7 +144,6 @@ def process_transactions(db, transaction_ids):
             # Get AI prediction
             predicted_category_index = predict_category(transaction_features_scaled)[0][0]
             predicted_category_name = encoder.inverse_transform([predicted_category_index])[0]
-            logger.info(f"Predicted category: {predicted_category_name}")
             
             # Convert category name to category ID
             predicted_category_id = get_or_create_category(db, predicted_category_name)
@@ -161,6 +171,5 @@ def process_transactions(db, transaction_ids):
     finally:
         db.close()
 '''
-1. Refactor code. Move transformation of precition from number to name, to ai_model.py
-2. Update confidence score to be output of model
+1. Update confidence score to be output of model
 '''
