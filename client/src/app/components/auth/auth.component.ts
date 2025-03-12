@@ -20,7 +20,7 @@ export class AuthComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   onLogin() {
-    console.log('Logging in with:', this.email, this.password);
+    console.log('Logging in with:', this.email);
   }
 
   onSubmit() {

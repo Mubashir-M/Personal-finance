@@ -48,7 +48,7 @@ def get_monthly_total(request: Request, year: Optional[int] = None,  month: Opti
 @app.get("/expenses/monthly-categories")
 def get_monthly_categories(request: Request, year:int, month:int, token: Optional[str] = None, db: Session = Depends(get_db)):
     if token is None:
-            token = request.headers.get("Authorization").split(" ")[1]
+        token = request.headers.get("Authorization").split(" ")[1]
     user = verify_token(token)
     return crud.get_monthly_categorized_expenses_by_user(db, user, year, month)
 

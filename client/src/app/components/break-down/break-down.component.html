@@ -1,0 +1,27 @@
+<div class="breakdown-container">
+  <div class="montly-container">
+    <div class="top-container">
+      <button (click)="previousYear()">&lt; Prev</button>
+      <button (click)="nextYear()">Next &gt;</button>
+    </div>
+    <div class="bottom-container">
+      <h2>Monthly Expense</h2>
+      <ngx-charts-bar-vertical
+        [results]="expenses"
+        [view]="view"
+        [scheme]="colorScheme"
+        [customColors]="customColors"
+        [xAxis]="true"
+        [yAxis]="true"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [yAxisLabel]="'Expense (€)'"
+        (select)="onBarHover($event)"
+      >
+      </ngx-charts-bar-vertical>
+    </div>
+  </div>
+  <div class="category-chart-container">
+    <p>Category charts</p>
+  </div>
+</div>
