@@ -1,4 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -11,7 +16,9 @@ import { RouterModule } from '@angular/router';
 })
 export class SidebarComponent {
   activeDiv: string | null = null;
-  toggleSideBar: boolean = true;
+  sidebarCollapsed: boolean = false;
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   @Output() sidebarToggle = new EventEmitter<boolean>();
 
@@ -21,8 +28,9 @@ export class SidebarComponent {
   }
 
   menuBtnClk() {
-    this.toggleSideBar = !this.toggleSideBar;
-    this.sidebarToggle.emit(this.toggleSideBar);
-    console.log('Sidebar toggled:', this.toggleSideBar);
+    this.sidebarCollapsed = !this.sidebarCollapsed; // Toggle the state
+    this.sidebarToggle.emit(this.sidebarCollapsed); // Emit the new state
+    this.cdr.detectChanges(); // Ensure the view is updated
+    console.log('Sidebar toggled:', this.sidebarCollapsed);
   }
 }

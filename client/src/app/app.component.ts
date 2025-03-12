@@ -46,6 +46,7 @@ export class AppComponent {
 
   onSidebarToggle(collapsed: boolean) {
     this.sidebarCollapsed = collapsed;
+    console.log('Sidebar expanded:', !this.sidebarCollapsed);
   }
 
   logout() {

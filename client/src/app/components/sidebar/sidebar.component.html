@@ -1,12 +1,14 @@
 <div
   class="sidebar-container"
-  [ngClass]="{ 'sidebar-collapsed': !toggleSideBar }"
+  [ngClass]="{ 'sidebar-collapsed': sidebarCollapsed }"
 >
   <div class="sidebar-upper">
     <div class="sidebar-togglebtn">
       <mat-icon (click)="menuBtnClk()">
         <span class="material-symbols-outlined">
-          {{ toggleSideBar ? "keyboard_arrow_left" : "keyboard_arrow_right" }}
+          {{
+            sidebarCollapsed ? "keyboard_arrow_left" : "keyboard_arrow_right"
+          }}
         </span>
       </mat-icon>
     </div>

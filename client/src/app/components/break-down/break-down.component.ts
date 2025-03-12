@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, NO_ERRORS_SCHEMA } from '@angular/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ExpenseService } from './expense.service';
 import { TokenService } from '../auth/token.service';
 import {
   trigger,
@@ -34,19 +35,36 @@ export class BreakDownComponent {
   currentYearIndex: number = 0;
   years: any[] = [];
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private expenseService: ExpenseService) {}
 
   ngOnInit() {
-    this.getMonthlyExpenses();
+    this.loadExpenses();
     this.updateCustomColors();
     console.log('current-year: ', this.currentYearIndex);
+  }
+
+  loadExpenses() {
+    this.expenseService.getMonthlyExpenses().subscribe(
+      (data: any) => {
+        data = data.map((expense: { total: number }) => {
+          expense.total = Math.abs(expense.total);
+          return expense;
+        });
+
+        this.years = this.expenseService.groupDataByYear(data);
+        this.updateYearlyData();
+        this.updateCustomColors();
+      },
+      (error) => {
+        console.error('Error fetching expenses', error);
+      }
+    );
   }
 
   previousYear() {
     console.log('Clicked prev');
     if (this.currentYearIndex < this.years.length - 1) {
       this.currentYearIndex++;
-      console.log('current-year: ', this.years[this.currentYearIndex].year);
       this.updateYearlyData();
       this.updateCustomColors();
     }
@@ -56,7 +74,6 @@ export class BreakDownComponent {
     console.log('Clicked next');
     if (this.currentYearIndex > 0) {
       this.currentYearIndex--;
-      console.log('current-year: ', this.years[this.currentYearIndex].year);
       this.updateYearlyData();
       this.updateCustomColors();
     }
@@ -94,46 +111,6 @@ export class BreakDownComponent {
     }));
   }
 
-  getMonthlyExpenses() {
-    const token = this.tokenService.getToken();
-    if (!token) {
-      console.error('No token found.');
-      return;
-    }
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    this.http
-      .get('http://localhost:8000/expenses/monthly-total', { headers })
-      .subscribe(
-        (data: any) => {
-          // Group data by year
-          data = data.map((expense: { total: number }) => {
-            expense.total = Math.abs(expense.total);
-            return expense;
-          });
-
-          this.years = this.groupDataByYear(data);
-          this.updateYearlyData();
-
-          this.updateCustomColors();
-        },
-        (error) => {
-          console.error('Error fetching expenses', error);
-        }
-      );
-  }
-
-  groupDataByYear(data: any[]) {
-    const yearsMap = new Map<number, { year: number; expenses: any[] }>();
-    data.forEach((expense: any) => {
-      const year = expense.year;
-      if (!yearsMap.has(year)) {
-        yearsMap.set(year, { year, expenses: [] });
-      }
-      yearsMap.get(year)?.expenses.push(expense);
-    });
-    return Array.from(yearsMap.values());
-  }
-
   getMonthName(month: number): string {
     const months = [
       'January',
@@ -152,5 +129,3 @@ export class BreakDownComponent {
     return months[month - 1];
   }
 }
-
-// Refactor code.

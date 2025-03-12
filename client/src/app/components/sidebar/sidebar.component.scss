@@ -15,6 +15,11 @@
   display: none;
 }
 
+.sidebar-upper,
+.sidebar-lower {
+  width: 100%;
+}
+
 .sidebar-upper {
   display: flex;
   flex-direction: column;
