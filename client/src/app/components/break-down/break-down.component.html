@@ -16,12 +16,25 @@
         [showXAxisLabel]="true"
         [showYAxisLabel]="true"
         [yAxisLabel]="'Expense (€)'"
-        (select)="onBarHover($event)"
+        (select)="onBarClick($event)"
       >
       </ngx-charts-bar-vertical>
     </div>
   </div>
   <div class="category-chart-container">
-    <p>Category charts</p>
+    <h2>Categorized expense {{ selectedBar }}</h2>
+    <ngx-charts-bar-horizontal
+      [results]="monthlyCategorized"
+      [view]="view"
+      [scheme]="colorScheme"
+      [customColors]="customColors"
+      [xAxis]="true"
+      [yAxis]="true"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [yAxisLabel]="'Category'"
+      [xAxisLabel]="'Expense (€)'"
+    >
+    </ngx-charts-bar-horizontal>
   </div>
 </div>

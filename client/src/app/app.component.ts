@@ -22,7 +22,6 @@ export class AppComponent {
   title = 'finance-ai-app';
   isLoggedIn: boolean = false;
   sidebarCollapsed = false;
-  isLoading: boolean = true;
 
   constructor(
     private router: Router,
@@ -40,7 +39,6 @@ export class AppComponent {
 
     this.authService.isLoggedIn$.subscribe((status) => {
       this.isLoggedIn = status;
-      this.isLoading = false;
     });
   }
 
