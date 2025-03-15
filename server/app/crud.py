@@ -11,6 +11,9 @@ import joblib
 from passlib.context import CryptContext
 from datetime import datetime
 from fastapi.encoders import jsonable_encoder
+import uuid
+from sqlalchemy.dialects.postgresql import insert
+import pandas as pd
 
 import logging
 
@@ -43,24 +46,39 @@ def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
 def save_transactions(db: Session, transactions: list[TransactionsCreate]):
-    new_transactions = [
-        Transaction(
-            amount=t.amount,
-            merchant=t.merchant,
-            description = t.description,
-            date = t.date,
-            user_id = t.user_id,
+
+    batch_id = uuid.uuid4()
+    insert_statements = []
+
+    for transaction in transactions:
+        exists = db.query(Transaction).filter(
+            Transaction.user_id == transaction.user_id,
+            Transaction.amount == transaction.amount,
+            Transaction.merchant == transaction.merchant,
+            Transaction.date == transaction.date,
+        ).first()
+
+        if exists and exists.batch_id != str(batch_id):
+            print("Transaction already exists.")
+            continue
+
+        stmt = insert(Transaction).values(
+            batch_id=str(batch_id),
+            user_id=transaction.user_id,
+            amount=transaction.amount,
+            merchant=transaction.merchant,
+            description=transaction.description,
+            date=transaction.date,
         )
-        for t in transactions
-    ]
+        insert_statements.append(stmt)
 
-    db.add_all(new_transactions)
+    for stmt in insert_statements:
+        db.execute(stmt)
+
     db.commit()
-    for transaction in new_transactions:
-        db.refresh(transaction)
 
-
-    return [t.id for t in new_transactions]
+    inserted_ids = [t.id for t in db.query(Transaction.id).filter(Transaction.batch_id == batch_id).all()]
+    return inserted_ids
 
 def get_mothly_expenses_by_user(db, user, year, month):
     query = db.query(func.extract('year', Transaction.date).label('year'),
@@ -126,23 +144,18 @@ def process_transactions(db, transaction_ids):
             if not transaction:
                 continue  # Skip if transaction not found
             
-            # Prepare AI input features
-            transaction_features = {
-                "Amount": transaction.amount,
-                "Merchant": transaction.merchant,
-                "day_of_week": transaction.date.weekday()
-            }
+            # Prepare AI input features as a pandas DataFrame
+            transaction_features = pd.DataFrame({
+                "Amount": [transaction.amount],
+                "Merchant": [transaction.merchant],
+                "day_of_week": [transaction.date.weekday()]
+            })
 
-            # Handle 'Amount' - Scaling
-            # Apply the same scaling transformation that was applied during training
-            transaction_features_scaled = transaction_features.copy()
-            transaction_features_scaled['Amount'] = scaler.transform([[transaction_features['Amount']]])[0][0]  # Apply scaling
-
-            # 'Merchant' will be passed as a categorical feature to CatBoost
-            transaction_features_scaled['Merchant'] = transaction_features['Merchant']  # Just keep it as is
+            # Apply the scaling to feature "Amount"
+            transaction_features['Amount'] = scaler.transform(transaction_features[['Amount']])
 
             # Get AI prediction
-            predicted_category_index = predict_category(transaction_features_scaled)[0][0]
+            predicted_category_index = predict_category(transaction_features)[0][0]
             predicted_category_name = encoder.inverse_transform([predicted_category_index])[0]
             
             # Convert category name to category ID

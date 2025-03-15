@@ -7,6 +7,8 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,19 +20,28 @@ export class SidebarComponent {
   activeDiv: string | null = null;
   sidebarCollapsed: boolean = false;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   @Output() sidebarToggle = new EventEmitter<boolean>();
 
   setActive(divName: string) {
     this.activeDiv = divName;
+    if (this.activeDiv == 'logout') {
+      this.authService.logout();
+      console.log('user is logging out!');
+      this.router.navigate(['auth']);
+    }
     console.log('clicked', this.activeDiv);
   }
 
   menuBtnClk() {
-    this.sidebarCollapsed = !this.sidebarCollapsed; // Toggle the state
-    this.sidebarToggle.emit(this.sidebarCollapsed); // Emit the new state
-    this.cdr.detectChanges(); // Ensure the view is updated
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+    this.sidebarToggle.emit(this.sidebarCollapsed);
+    this.cdr.detectChanges();
     console.log('Sidebar toggled:', this.sidebarCollapsed);
   }
 }

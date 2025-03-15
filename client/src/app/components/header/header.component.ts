@@ -16,17 +16,7 @@ export class HeaderComponent {
   isLoggedIn: boolean = false;
   dropdownOpen = false;
 
-  constructor(private authService: AuthService, private router: Router) {
-    this.authService.isLoggedIn$.subscribe((loggedIn) => {
-      this.isLoggedIn = loggedIn;
-    });
-  }
-
-  onLogout() {
-    this.authService.logout();
-    console.log('user is logging out!');
-    this.router.navigate(['auth']);
-  }
+  constructor() {}
 
   onSearchInputChanged() {
     console.log(this.searchInputText);

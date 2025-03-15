@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, func
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, func, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
 Base = declarative_base()
 
@@ -27,9 +29,10 @@ class Category(Base):
 class Transaction(Base):
     __tablename__ = "transactions"
     
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    batch_id = Column(UUID, nullable=False, default=uuid.uuid4)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)  # Nullable for AI predictions
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
     amount = Column(Float, nullable=False)
     merchant = Column(String, nullable=False)
     description = Column(String)
@@ -39,7 +42,6 @@ class Transaction(Base):
     user = relationship("User", back_populates="transactions")
     category = relationship("Category", back_populates="transactions")
     ai_prediction = relationship("AIPrediction", back_populates="transaction", uselist=False)
-
 
 class AIPrediction(Base):
     __tablename__ = "ai_predictions"

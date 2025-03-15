@@ -24,5 +24,4 @@ model = load_model()
 def predict_category(transaction_features):   
     if model is None:
         raise RuntimeError("Model not loaded. Cannot make predictions.")
-    transaction_df = pd.DataFrame([transaction_features])
-    return model.predict(transaction_df)
+    return model.predict(transaction_features)
