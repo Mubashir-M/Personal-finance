@@ -6,8 +6,15 @@
 html,
 body {
   height: 100%;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
 }

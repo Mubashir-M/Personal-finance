@@ -1,0 +1,90 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.left {
+  border-right: 1px solid #f2f2f2;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+}
+
+.right {
+  flex-grow: 1;
+  max-width: 30%;
+}
+
+.left-top {
+  flex: 1;
+  margin-top: 20px;
+  margin-left: 10px;
+  h2 {
+    font-family: Plus Jakarta Sans;
+    font-size: 21px;
+    margin-bottom: 10px;
+  }
+  p {
+    color: #969696;
+    font-size: 12px;
+    margin-bottom: 30px;
+  }
+}
+.left-bottom {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-height: 400px;
+  p {
+    border-bottom: 3px solid #5735d2;
+    width: 70px;
+    color: #5735d2;
+    font-size: large;
+    font-weight: 600;
+  }
+}
+
+ul {
+  border-top: 2px solid #f2f2f2;
+}
+.income-list {
+  list-style: none;
+  padding: 0;
+  overflow-y: auto;
+  margin-right: 20px;
+}
+
+.income-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.income-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.date {
+  color: #969696;
+  font-size: 14px;
+}
+.total-income {
+  span {
+    color: #5cc47c;
+  }
+}
+span {
+  font-family: Plus Jakarta Sans;
+  font-weight: 500;
+  font: bold;
+}
+
+@media (max-width: 900px) {
+  .left-bottom {
+    max-height: 600px;
+  }
+}

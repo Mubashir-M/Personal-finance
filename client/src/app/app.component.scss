@@ -1,32 +1,37 @@
-html,
 body {
   height: 100%;
   width: 100%;
   margin: 0;
-}
-
-body {
   display: flex;
   flex-direction: column;
 }
 
 .body-container {
-  display: grid;
-  grid-template-columns: 170px 1fr;
-  grid-template-rows: 1fr;
+  display: flex;
+  flex-direction: row;
   height: calc(100vh - 65px);
   gap: 10px;
   flex-grow: 1;
-  transition: grid-template-columns 0.3s ease-in-out;
-}
-
-.body-container.collapsed {
-  grid-template-columns: 60px 1fr;
+  transition: 0.3s ease-in-out;
 }
 
 .content {
+  height: 100%;
+  width: 100%;
   display: flex;
-  flex-grow: 1;
-  transition: margin-left 0.3s ease-in-out;
   flex-direction: column;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.loading-spinner {
+  width: 100vw;
+  height: 100vh;
+  background: #5735d2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  p {
+    color: white;
+    font-size: 40px;
+  }
 }

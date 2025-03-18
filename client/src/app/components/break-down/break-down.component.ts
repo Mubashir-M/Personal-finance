@@ -62,7 +62,7 @@ export class BreakDownComponent {
         this.updateCustomColors();
       },
       (error) => {
-        console.error('Error fetching expenses', error);
+        console.error('Error fetching expenses: ', error);
       }
     );
   }
@@ -118,7 +118,7 @@ export class BreakDownComponent {
   updateYearlyData() {
     this.expenses = this.years[this.currentYearIndex].expenses
       .map((expense: any) => ({
-        name: this.getMonthName(expense.month),
+        name: this.expenseService.getMonthName(expense.month),
         value: expense.total,
         month: expense.month,
         year: this.years[this.currentYearIndex].year,
@@ -155,23 +155,5 @@ export class BreakDownComponent {
           ? 'rgba(87, 53, 210, 1)'
           : 'rgba(87, 53, 210, 0.65)',
     }));
-  }
-
-  getMonthName(month: number): string {
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    return months[month - 1];
   }
 }

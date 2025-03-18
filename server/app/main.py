@@ -38,6 +38,13 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.get("/user", response_model=schemas.UserResponse)
+def get_user(request: Request, token: Optional[str] = None, db: Session = Depends(get_db)):
+    if token is None:
+        token = request.headers.get("Authorization").split(" ")[1]
+    user = verify_token(token)
+    return crud.get_user_by_id(db, user)
+
 @app.get("/expenses/monthly-total")
 def get_monthly_total(request: Request, year: Optional[int] = None,  month: Optional[int] = None, token: Optional[str] = None, db: Session = Depends(get_db)):
     if token is None:
@@ -51,6 +58,20 @@ def get_monthly_categories(request: Request, year:int, month:int, token: Optiona
         token = request.headers.get("Authorization").split(" ")[1]
     user = verify_token(token)
     return crud.get_monthly_categorized_expenses_by_user(db, user, year, month)
+
+@app.get("/incomes/monthly-total")
+def get_monthly_total_income(request: Request, token: Optional[str] = None, db: Session = Depends(get_db)):
+    if token is None:
+        token = request.headers.get("Authorization").split(" ")[1]
+    user = verify_token(token)
+    return crud.get_monthly_total_income_by_user(db, user)
+
+@app.get("/incomes")
+def get_incomes(request: Request, token: Optional[str] = None, db: Session = Depends(get_db)):
+    if token is None:
+        token = request.headers.get("Authorization").split(" ")[1]
+    user = verify_token(token)
+    return crud.get_monthly_incomes_by_user(db, user)
 
 @app.post("/login", response_model=schemas.Token)
 def login(user: schemas.UserLogin, db : Session = Depends(get_db)):

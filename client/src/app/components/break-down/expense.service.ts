@@ -24,6 +24,26 @@ export class ExpenseService {
     return this.http.get(`${this.apiUrl}/expenses/monthly-total`, { headers });
   }
 
+  getMonthlyIncomes(): Observable<any> {
+    const token = this.tokenService.getToken();
+    if (!token) {
+      throw new Error('No token found.');
+    }
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.get(`${this.apiUrl}/incomes/monthly-total`, { headers });
+  }
+
+  getMonthlyIncomesBySources(): Observable<any> {
+    const token = this.tokenService.getToken();
+    if (!token) {
+      throw new Error('No token found.');
+    }
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.get(`${this.apiUrl}/incomes`, { headers });
+  }
+
   getMonthlyCategoziredExpenses(year: number, month: number): Observable<any> {
     const token = this.tokenService.getToken();
 
@@ -39,5 +59,23 @@ export class ExpenseService {
         .set('year', year.toString())
         .set('month', month.toString()),
     });
+  }
+
+  getMonthName(month: number): string {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1];
   }
 }
