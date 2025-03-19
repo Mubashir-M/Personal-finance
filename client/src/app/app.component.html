@@ -1,14 +1,16 @@
-<div *ngIf="isLoading" class="loading-spinner">
-  <div class="spinner">
-    <p>Loading...</p>
-    <!-- You can replace this with a spinner -->
+<ng-container *ngIf="isLoading">
+  <div class="loading-spinner">
+    <div class="spinner">
+      <p>Loading...</p>
+    </div>
   </div>
-</div>
+</ng-container>
 
-<!-- Show the authentication component if the user is not logged in -->
-<app-auth *ngIf="!isLoggedIn" />
+<ng-container *ngIf="!isLoading && !isLoggedIn">
+  <app-auth />
+</ng-container>
 
-<div *ngIf="isLoggedIn">
+<ng-container *ngIf="isLoggedIn && !isLoading">
   <app-header />
   <div class="body-container" [class.collapsed]="sidebarCollapsed">
     <app-sidebar (sidebarToggle)="onSidebarToggle($event)" />
@@ -16,6 +18,4 @@
       <router-outlet></router-outlet>
     </div>
   </div>
-</div>
-
-<!-- Loading screen needs to be fixed -->
+</ng-container>

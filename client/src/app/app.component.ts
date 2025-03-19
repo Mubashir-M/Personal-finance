@@ -3,6 +3,7 @@ import {
   Inject,
   PLATFORM_ID,
   ChangeDetectorRef,
+  NgZone,
 } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
@@ -10,6 +11,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AuthService } from './components/auth/auth.service';
+import { TokenService } from './components/auth/token.service';
 
 @Component({
   selector: 'app-root',
@@ -28,31 +30,27 @@ export class AppComponent {
   isLoading: Boolean = true;
   isLoggedIn: boolean = false;
   sidebarCollapsed = false;
+  isReady: boolean = false;
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
+    private tokenService: TokenService,
+    private ngZone: NgZone,
     @Inject(PLATFORM_ID) private platformId: any
   ) {}
 
   ngOnInit() {
-    this.isLoading = true;
-    this.authService.isLoggedIn$.subscribe((status) => {
-      this.isLoggedIn = status;
-      this.isLoading = false; // Once status is updated, stop loading spinner
-      this.cdr.detectChanges(); // Ensure change detection
-      console.log('isLoggedIn after subscribe: ', this.isLoggedIn);
-    });
-
     if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem('token');
-      if (token) {
-        this.authService.setLoggedIn(token); // Set logged in state
-      } else {
-        this.isLoggedIn = false;
-        this.isLoading = false;
-      }
+      this.isLoading = true;
+      this.authService.isLoggedIn$.subscribe((status) => {
+        this.ngZone.run(() => {
+          this.isLoggedIn = status;
+          this.isLoading = false; // Once state is updated, set loading to false
+          this.cdr.detectChanges(); // Explicitly trigger change detection
+        });
+      });
     }
   }
 

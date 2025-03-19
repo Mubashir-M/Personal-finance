@@ -38,6 +38,13 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.get("/Transactions")
+def get_transactions(request: Request, token: Optional[str] = None, db: Session = Depends(get_db)):
+    if token is None:
+        token = request.headers.get("Authorization").split(" ")[1]
+    user = verify_token(token)
+    return crud.get_transactions_by_user(db, user)
+
 @app.get("/user", response_model=schemas.UserResponse)
 def get_user(request: Request, token: Optional[str] = None, db: Session = Depends(get_db)):
     if token is None:

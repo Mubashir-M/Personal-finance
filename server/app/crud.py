@@ -42,6 +42,18 @@ def create_user(db: Session, user: UserCreate):
 
     return new_user
 
+def get_transactions_by_user(db, user):
+    query = db.query(func.extract('year', Transaction.date).label('year'),
+                              func.extract('month', Transaction.date).label('month'),
+                              func.extract('day', Transaction.date).label('day'),
+                              Transaction.merchant,
+                              Transaction.amount) \
+    .filter(Transaction.user_id == user.id) \
+    .all()
+    transactions = [{"year": r.year, "month": r.month, "day": r.day, "merchant": r.merchant, "amount": r.amount} for r in query]
+
+    return transactions if transactions else 0
+
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 

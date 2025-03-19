@@ -23,6 +23,11 @@ body {
   transition: margin-left 0.3s ease-in-out;
 }
 
+.loading-spinner-placeholder {
+  width: 100vw;
+  height: 100vh;
+}
+
 .loading-spinner {
   width: 100vw;
   height: 100vh;

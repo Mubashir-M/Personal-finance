@@ -25,13 +25,13 @@
         <li *ngFor="let income of income_sources">
           <div class="income-detail">
             <span class="income-source"
-              ><strong>{{ income.income_source }}</strong></span
+              ><strong>{{ income.merchant }}</strong></span
             >
             <span class="date">{{ income.month }}.{{ income.year }}</span>
           </div>
           <div class="total-income">
             <span
-              ><strong>+${{ income.total_income }}</strong></span
+              ><strong>+${{ income.amount }}</strong></span
             >
           </div>
         </li>

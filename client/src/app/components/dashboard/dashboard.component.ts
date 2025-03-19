@@ -21,6 +21,15 @@ interface Income {
   monthName?: string; // Optional field for month name
 }
 
+interface Transaction {
+  amount: number;
+  day: number;
+  merchant: string;
+  month: number;
+  year: number;
+  monthName?: string;
+}
+
 @Component({
   selector: 'app-dashboard',
   imports: [NgxChartsModule],
@@ -30,13 +39,14 @@ interface Income {
   animations: [
     trigger('animateCircle', [
       transition(':enter', [
-        style({ strokeDashoffset: 251.2 }), // Starting value
-        animate('2s ease-out', style({ strokeDashoffset: 0 })), // Animate to 0
+        style({ transform: 'scale(0)', opacity: 0 }), // Starting state: invisible and small
+        animate('2s ease-out', style({ transform: 'scale(1)', opacity: 1 })), // Animate to normal size and opacity
       ]),
     ]),
   ],
 })
 export class DashboardComponent {
+  transactions: any[] = [];
   expenses: any[] = [];
   incomes: any[] = [];
   income_sources: any[] = [];
@@ -44,6 +54,7 @@ export class DashboardComponent {
   user: any;
 
   view: [number, number] = [600, 400];
+
   colorScheme: Color = {
     name: 'myScheme',
     selectable: true,
@@ -60,25 +71,26 @@ export class DashboardComponent {
   ) {}
 
   ngOnInit() {
-    this.loadExpenses();
-    this.loadIncomes();
-    this.loadIncomesBySources();
-    this.updateView();
     this.loadUser();
+    this.loadTransactions();
+    this.updateView();
   }
 
+  private resizeTimeout: any;
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
-    this.updateView();
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => {
+      this.updateView();
+    }, 200);
   }
+
   updateView() {
     const width = window.innerWidth;
     if (width <= 660) {
-      this.view = [300, 200];
+      this.view = [300, 300];
     } else if (width <= 740) {
-      this.view = [350, 200];
-    } else if (width <= 900) {
-      this.view = [400, 200];
+      this.view = [350, 300];
     } else if (width <= 900) {
       this.view = [450, 300];
     } else if (width <= 1300) {
@@ -98,48 +110,54 @@ export class DashboardComponent {
       }
     );
   }
-  loadExpenses() {
-    this.expenseService.getMonthlyExpenses().subscribe(
+
+  loadTransactions() {
+    this.expenseService.getTransactions().subscribe(
       (data: any) => {
-        data = data.map((expense: Expense) => {
-          expense.total = Math.abs(expense.total);
-          expense.monthName = this.expenseService.getMonthName(expense.month);
-          return expense;
-        });
-        this.expenses = data;
-        this.prepareChartData();
+        this.transactions = data;
+        this.processTransactions();
       },
       (error) => {
-        console.error('Error fetching expenses: ', error);
+        console.error('Error fetching transactions: ', error);
       }
     );
   }
 
-  loadIncomes() {
-    this.expenseService.getMonthlyIncomes().subscribe(
-      (data: any) => {
-        data = data.map((income: Income) => {
-          income.monthName = this.expenseService.getMonthName(income.month);
-          return income;
-        });
-        this.incomes = data;
-        this.prepareChartData();
-      },
-      (error) => {
-        console.error('Error fetching incomes: ', error);
-      }
-    );
-  }
+  processTransactions() {
+    const expensesGrouped: { [key: string]: number } = {};
+    const incomesGrouped: { [key: string]: number } = {};
+    const incomeSources: { [key: string]: number } = {};
 
-  loadIncomesBySources() {
-    this.expenseService.getMonthlyIncomesBySources().subscribe(
-      (data: any) => {
-        this.income_sources = data.reverse();
-      },
-      (error) => {
-        console.error('Error fetching incomes by sources: ', error);
+    this.transactions.forEach((transaction: Transaction) => {
+      const { amount, month, year, merchant } = transaction;
+      const monthYear = `${this.expenseService.getMonthName(month)} ${year}`;
+
+      if (amount < 0) {
+        if (!expensesGrouped[monthYear]) {
+          expensesGrouped[monthYear] = 0;
+        }
+        expensesGrouped[monthYear] += Math.abs(amount);
+      } else {
+        if (!incomesGrouped[monthYear]) {
+          incomesGrouped[monthYear] = 0;
+        }
+        incomesGrouped[monthYear] += amount;
+
+        this.income_sources.push(transaction);
       }
-    );
+    });
+
+    this.expenses = Object.keys(expensesGrouped).map((monthYear) => ({
+      monthYear,
+      total: expensesGrouped[monthYear],
+    }));
+
+    this.incomes = Object.keys(incomesGrouped).map((monthYear) => ({
+      monthYear,
+      total: incomesGrouped[monthYear],
+    }));
+
+    this.prepareChartData();
   }
 
   prepareChartData() {
@@ -147,19 +165,13 @@ export class DashboardComponent {
     const incomesGrouped: { [key: string]: number } = {};
 
     this.expenses.forEach((expense) => {
-      const monthYear = `${expense.monthName} ${expense.year}`;
-      if (!expensesGrouped[monthYear]) {
-        expensesGrouped[monthYear] = 0;
-      }
-      expensesGrouped[monthYear] += expense.total;
+      const { monthYear, total } = expense;
+      expensesGrouped[monthYear] = total;
     });
 
     this.incomes.forEach((income) => {
-      const monthYear = `${income.monthName} ${income.year}`;
-      if (!incomesGrouped[monthYear]) {
-        incomesGrouped[monthYear] = 0;
-      }
-      incomesGrouped[monthYear] += income.total;
+      const { monthYear, total } = income;
+      incomesGrouped[monthYear] = total;
     });
 
     // Combine expenses and incomes data
@@ -187,6 +199,7 @@ export class DashboardComponent {
       },
     ];
 
+    // Sort by date
     this.Data.forEach((chartData) => {
       chartData.series.sort(
         (

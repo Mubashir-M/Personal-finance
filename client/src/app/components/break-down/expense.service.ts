@@ -12,6 +12,17 @@ export class ExpenseService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
+  getTransactions(): Observable<any> {
+    const token = this.tokenService.getToken();
+    if (!token) {
+      throw new Error('No token found.');
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.get(`${this.apiUrl}/Transactions`, { headers });
+  }
+
   getMonthlyExpenses(): Observable<any> {
     const token = this.tokenService.getToken();
 

@@ -48,23 +48,16 @@
   margin-right: 10px;
   img {
     margin: 0 8px 0 8px;
-    max-width: 35px;
-    max-height: 35px;
-    width: 35px;
-    height: 35px;
     border-radius: 20px;
     cursor: pointer;
   }
 }
-
+.avatar {
+  object-fit: cover;
+}
 .material-icons {
   color: lightgray;
   cursor: pointer;
-}
-
-.header-logo {
-  width: 25px;
-  height: 25px;
 }
 
 .dropdown-icon {
