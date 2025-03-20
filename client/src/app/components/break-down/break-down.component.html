@@ -1,13 +1,31 @@
 <div class="breakdown-container">
-  <div class="montly-container">
-    <div class="top-container">
-      <button (click)="previousYear()">&lt; Prev</button>
-      <button (click)="nextYear()">Next &gt;</button>
+  <div class="top-container">
+    <button (click)="previousYear()">&lt; Prev</button>
+    <button (click)="nextYear()">Next &gt;</button>
+  </div>
+  <div class="schrollable">
+    <div class="montly-container">
+      <div class="bottom-container">
+        <h2>Monthly Expense</h2>
+        <ngx-charts-bar-vertical
+          [results]="expenses"
+          [view]="view"
+          [scheme]="colorScheme"
+          [customColors]="customColors"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [yAxisLabel]="'Expense (€)'"
+          (select)="onBarClick($event)"
+        >
+        </ngx-charts-bar-vertical>
+      </div>
     </div>
-    <div class="bottom-container">
-      <h2>Monthly Expense</h2>
-      <ngx-charts-bar-vertical
-        [results]="expenses"
+    <div class="category-chart-container">
+      <h2>Categorized expense {{ selectedBar }}</h2>
+      <ngx-charts-bar-horizontal
+        [results]="monthlyCategorized"
         [view]="view"
         [scheme]="colorScheme"
         [customColors]="customColors"
@@ -15,26 +33,10 @@
         [yAxis]="true"
         [showXAxisLabel]="true"
         [showYAxisLabel]="true"
-        [yAxisLabel]="'Expense (€)'"
-        (select)="onBarClick($event)"
+        [yAxisLabel]="'Category'"
+        [xAxisLabel]="'Expense (€)'"
       >
-      </ngx-charts-bar-vertical>
+      </ngx-charts-bar-horizontal>
     </div>
-  </div>
-  <div class="category-chart-container">
-    <h2>Categorized expense {{ selectedBar }}</h2>
-    <ngx-charts-bar-horizontal
-      [results]="monthlyCategorized"
-      [view]="view"
-      [scheme]="colorScheme"
-      [customColors]="customColors"
-      [xAxis]="true"
-      [yAxis]="true"
-      [showXAxisLabel]="true"
-      [showYAxisLabel]="true"
-      [yAxisLabel]="'Category'"
-      [xAxisLabel]="'Expense (€)'"
-    >
-    </ngx-charts-bar-horizontal>
   </div>
 </div>

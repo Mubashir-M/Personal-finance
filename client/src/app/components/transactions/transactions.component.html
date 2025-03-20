@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="history-header">
+    <h3>Recent Activity</h3>
+    <p>History</p>
+  </div>
+  <div class="transactions-container">
+    <ul class="transactions" *ngIf="transactions().length > 0; else noData">
+      <li *ngFor="let transaction of transactions()">
+        <div class="transaction-detail">
+          <span class="merchant">
+            {{ transaction.merchant }}
+          </span>
+          <span class="date">
+            {{ transaction.month }}.{{ transaction.year }}
+          </span>
+        </div>
+        <div class="amount">
+          <span class="amount-total">{{ transaction.amount }}</span>
+        </div>
+      </li>
+    </ul>
+    <ng-template #noData>
+      <p>No transactions available.</p>
+    </ng-template>
+  </div>
+</div>
+
+<!--
+1. Fetch transactions seperately from API with categories
+2. Add a function to change transactions manually.
+3. Add search functionality with search bar next to history-header
+-->

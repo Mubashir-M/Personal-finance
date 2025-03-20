@@ -1,41 +1,45 @@
 <div class="dashboard-container">
   <div class="left">
-    <div class="left-top">
+    <div class="left-greetings">
       <h2>Welcome, {{ user?.username }}!</h2>
       <p>Today is a great day to conduct financial activities.</p>
-      <h2>Financials</h2>
-      <ngx-charts-line-chart
-        [results]="Data"
-        [view]="view"
-        [scheme]="colorScheme"
-        [xAxis]="true"
-        [yAxis]="true"
-        [showXAxisLabel]="true"
-        [showYAxisLabel]="true"
-        [showGridLines]="true"
-        [yAxisLabel]="'Expense (€)'"
-        [xAxisLabel]="'Date'"
-      >
-      </ngx-charts-line-chart>
     </div>
-    <div class="left-bottom">
-      <h3>Income</h3>
-      <p>Sources</p>
-      <ul class="income-list">
-        <li *ngFor="let income of income_sources">
-          <div class="income-detail">
-            <span class="income-source"
-              ><strong>{{ income.merchant }}</strong></span
-            >
-            <span class="date">{{ income.month }}.{{ income.year }}</span>
-          </div>
-          <div class="total-income">
-            <span
-              ><strong>+${{ income.amount }}</strong></span
-            >
-          </div>
-        </li>
-      </ul>
+    <div class="left-graphs">
+      <div class="left-top">
+        <h2>Financials</h2>
+        <ngx-charts-line-chart
+          [results]="Data"
+          [view]="view"
+          [scheme]="colorScheme"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [showGridLines]="true"
+          [yAxisLabel]="'Expense (€)'"
+          [xAxisLabel]="'Date'"
+        >
+        </ngx-charts-line-chart>
+      </div>
+      <div class="left-bottom">
+        <h3>Income</h3>
+        <p>Sources</p>
+        <ul class="income-list">
+          <li *ngFor="let income of income_sources">
+            <div class="income-detail">
+              <span class="income-source"
+                ><strong>{{ income.merchant }}</strong></span
+              >
+              <span class="date">{{ income.month }}.{{ income.year }}</span>
+            </div>
+            <div class="total-income">
+              <span
+                ><strong>+${{ income.amount }}</strong></span
+              >
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="right">

@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, effect, HostListener } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ExpenseService } from '../break-down/expense.service';
 import { TokenService } from '../auth/token.service';
@@ -7,28 +7,8 @@ import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { AuthService } from '../auth/auth.service';
 import { UserService } from '../services/UserService';
-
-interface Expense {
-  total: number;
-  month: number;
-  year: number;
-  monthName?: string; // Optional field for month name
-}
-interface Income {
-  total: number;
-  month: number;
-  year: number;
-  monthName?: string; // Optional field for month name
-}
-
-interface Transaction {
-  amount: number;
-  day: number;
-  merchant: string;
-  month: number;
-  year: number;
-  monthName?: string;
-}
+import { TransactionService } from '../services/transaction.service';
+import { Transaction } from '../../models/transaction.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,8 +19,8 @@ interface Transaction {
   animations: [
     trigger('animateCircle', [
       transition(':enter', [
-        style({ transform: 'scale(0)', opacity: 0 }), // Starting state: invisible and small
-        animate('2s ease-out', style({ transform: 'scale(1)', opacity: 1 })), // Animate to normal size and opacity
+        style({ transform: 'scale(0)', opacity: 0 }),
+        animate('2s ease-out', style({ transform: 'scale(1)', opacity: 1 })),
       ]),
     ]),
   ],
@@ -67,12 +47,18 @@ export class DashboardComponent {
     private expenseService: ExpenseService,
     private tokenService: TokenService,
     private authService: AuthService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private transactionsService: TransactionService
+  ) {
+    effect(() => {
+      this.processTransactions();
+    });
+  }
 
   ngOnInit() {
     this.loadUser();
-    this.loadTransactions();
+    this.transactionsService.fetchTransactions();
+    this.processTransactions();
     this.updateView();
   }
 
@@ -111,24 +97,13 @@ export class DashboardComponent {
     );
   }
 
-  loadTransactions() {
-    this.expenseService.getTransactions().subscribe(
-      (data: any) => {
-        this.transactions = data;
-        this.processTransactions();
-      },
-      (error) => {
-        console.error('Error fetching transactions: ', error);
-      }
-    );
-  }
-
   processTransactions() {
+    const transactions = this.transactionsService.transactions();
     const expensesGrouped: { [key: string]: number } = {};
     const incomesGrouped: { [key: string]: number } = {};
     const incomeSources: { [key: string]: number } = {};
 
-    this.transactions.forEach((transaction: Transaction) => {
+    transactions().forEach((transaction: Transaction) => {
       const { amount, month, year, merchant } = transaction;
       const monthYear = `${this.expenseService.getMonthName(month)} ${year}`;
 
@@ -199,7 +174,6 @@ export class DashboardComponent {
       },
     ];
 
-    // Sort by date
     this.Data.forEach((chartData) => {
       chartData.series.sort(
         (

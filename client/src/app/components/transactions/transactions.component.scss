@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: calc((100vh - 80px));
+}
+
+.history-header {
+  padding-top: 15px;
+  h3 {
+    padding-bottom: 10px;
+  }
+  p {
+    border-bottom: 3px solid #5735d2;
+    width: 70px;
+    color: #5735d2;
+    font-size: medium;
+    font-weight: 600;
+  }
+}
+
+.transactions-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+.transactions {
+  list-style: none;
+  padding: 0;
+  border-top: 2px solid #f2f2f2;
+}
+
+.transaction-detail {
+  display: flex;
+  flex-direction: column;
+}
+.transactions li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}

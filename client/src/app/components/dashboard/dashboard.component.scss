@@ -1,4 +1,5 @@
 .dashboard-container {
+  height: calc(100vh - 80px);
   display: flex;
   flex-direction: row;
 }
@@ -11,6 +12,23 @@
   max-width: 70%;
 }
 
+.left-greetings {
+  padding-top: 10px;
+  h2 {
+    font-family: Plus Jakarta Sans;
+    font-size: 21px;
+    margin-bottom: 10px;
+  }
+  p {
+    color: #969696;
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+}
+
+.left-graphs {
+  overflow-y: auto;
+}
 .right {
   flex-grow: 1;
   max-width: 30%;
@@ -20,16 +38,6 @@
   flex: 1;
   margin-top: 20px;
   margin-left: 10px;
-  h2 {
-    font-family: Plus Jakarta Sans;
-    font-size: 21px;
-    margin-bottom: 10px;
-  }
-  p {
-    color: #969696;
-    font-size: 12px;
-    margin-bottom: 30px;
-  }
 }
 .left-bottom {
   margin-left: 10px;
@@ -37,11 +45,14 @@
   flex-direction: column;
   flex: 1;
   max-height: 400px;
+  h3 {
+    padding-bottom: 10px;
+  }
   p {
     border-bottom: 3px solid #5735d2;
     width: 70px;
     color: #5735d2;
-    font-size: large;
+    font-size: medium;
     font-weight: 600;
   }
 }

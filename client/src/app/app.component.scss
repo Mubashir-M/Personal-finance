@@ -1,6 +1,4 @@
 body {
-  height: 100%;
-  width: 100%;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -9,17 +7,15 @@ body {
 .body-container {
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 65px);
+  height: calc(100vh - 77px);
   gap: 10px;
-  flex-grow: 1;
   transition: 0.3s ease-in-out;
 }
 
 .content {
-  height: 100%;
-  width: 100%;
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   transition: margin-left 0.3s ease-in-out;
 }
 
