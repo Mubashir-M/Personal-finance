@@ -47,10 +47,12 @@ def get_transactions_by_user(db, user):
                               func.extract('month', Transaction.date).label('month'),
                               func.extract('day', Transaction.date).label('day'),
                               Transaction.merchant,
-                              Transaction.amount) \
+                              Transaction.amount,
+                              Category.name) \
+    .outerjoin(Category, Transaction.category_id == Category.id) \
     .filter(Transaction.user_id == user.id) \
     .all()
-    transactions = [{"year": r.year, "month": r.month, "day": r.day, "merchant": r.merchant, "amount": r.amount} for r in query]
+    transactions = [{"year": r.year, "month": r.month, "day": r.day, "merchant": r.merchant, "amount": r.amount, "category": r.name} for r in query]
 
     return transactions if transactions else 0
 

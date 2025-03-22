@@ -1,11 +1,23 @@
 <div class="container">
-  <div class="history-header">
-    <h3>Recent Activity</h3>
-    <p>History</p>
+  <div class="top">
+    <div class="history-header">
+      <h3>Recent Activity</h3>
+      <p>History</p>
+    </div>
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="Search for transactions here ..."
+        [(ngModel)]="searchInputText"
+      />
+    </div>
   </div>
   <div class="transactions-container">
-    <ul class="transactions" *ngIf="transactions().length > 0; else noData">
-      <li *ngFor="let transaction of transactions()">
+    <ul
+      class="transactions"
+      *ngIf="filteredTransactions().length > 0; else noData"
+    >
+      <li *ngFor="let transaction of filteredTransactions()">
         <div class="transaction-detail">
           <span class="merchant">
             {{ transaction.merchant }}
@@ -15,7 +27,16 @@
           </span>
         </div>
         <div class="amount">
-          <span class="amount-total">{{ transaction.amount }}</span>
+          <span class="category">{{ transaction.category }}</span>
+          <span
+            class="amount-total"
+            [ngClass]="{
+              negative: transaction.amount < 0,
+              positive: transaction.amount > 0
+            }"
+          >
+            €{{ transaction.amount }}</span
+          >
         </div>
       </li>
     </ul>

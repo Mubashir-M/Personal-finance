@@ -2,15 +2,7 @@ import { Injectable, signal, WritableSignal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { TokenService } from '../auth/token.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-
-interface Transaction {
-  amount: number;
-  day: number;
-  merchant: string;
-  month: number;
-  year: number;
-  monthName?: string;
-}
+import { Transaction } from '../../models/transaction.model';
 
 @Injectable({
   providedIn: 'root',

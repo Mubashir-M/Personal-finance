@@ -4,5 +4,6 @@ export interface Transaction {
   merchant: string;
   month: number;
   year: number;
+  category: string;
   monthName?: string;
 }
