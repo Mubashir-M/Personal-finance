@@ -2,80 +2,91 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 13px 10px 13px 10px;
+  padding: 13px 10px;
   border-bottom: 1px solid rgba(150, 150, 150, 0.2);
+  justify-content: space-between;
 }
 
 .logo-container {
-  flex-grow: 1;
+  flex-shrink: 0; // Prevent shrinking
   display: flex;
   justify-content: flex-start;
-  width: auto;
-  height: auto;
-  padding: 5px 0 5px 0;
+  padding: 5px 0;
   margin-left: 10px;
   cursor: pointer;
 }
+
 .search-bar-container {
   display: flex;
   justify-content: flex-start;
   flex-grow: 2;
   position: relative;
   margin-left: 30px;
+
   input {
     border: none;
-    width: 200px;
+    min-width: 200px; // Ensure consistent width
     padding: 7px 0 5px 15px;
     text-align: center;
     padding-left: 30px;
+    box-sizing: border-box;
   }
+
   input::placeholder {
     text-align: center;
   }
+
   input:focus {
     text-align: left;
   }
+
   mat-icon {
     position: absolute;
-    padding: 3px 0 0 3px;
+    left: 8px; // Adjust for better alignment
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0; // Remove padding
   }
 }
+
 .user-nav-container {
-  flex-grow: 1;
+  flex-shrink: 0; // Prevent shrinking
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   margin-right: 10px;
+
   img {
-    margin: 0 8px 0 8px;
+    margin: 0 8px;
     border-radius: 20px;
     cursor: pointer;
   }
+
+  .material-icons,
+  .dropdown-icon {
+    cursor: pointer;
+    color: lightgray;
+  }
+
+  .material-icons:hover,
+  .dropdown-icon:hover {
+    color: #5735d2;
+  }
 }
+
 .avatar {
   object-fit: cover;
 }
-.material-icons {
-  color: lightgray;
-  cursor: pointer;
-}
 
-.dropdown-icon {
-  padding: 0 10px 0 10px;
-}
 .dropdown-menu {
   position: absolute;
   top: 40px;
   right: 0;
   display: flex;
   flex-direction: column;
+
   button {
     background-color: rgb(151, 113, 233);
     color: lightgray;
   }
-}
-
-.user-nav-container .material-icons:hover,
-.user-nav-container .dropdown-icon:hover {
-  color: #5735d2;
 }

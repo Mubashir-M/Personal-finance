@@ -46,15 +46,27 @@ def get_transactions_by_user(db, user):
     query = db.query(func.extract('year', Transaction.date).label('year'),
                               func.extract('month', Transaction.date).label('month'),
                               func.extract('day', Transaction.date).label('day'),
+                              Transaction.id,
                               Transaction.merchant,
                               Transaction.amount,
+                              Transaction.category_id,
                               Category.name) \
     .outerjoin(Category, Transaction.category_id == Category.id) \
     .filter(Transaction.user_id == user.id) \
     .all()
-    transactions = [{"year": r.year, "month": r.month, "day": r.day, "merchant": r.merchant, "amount": r.amount, "category": r.name} for r in query]
+    transactions = [{"transaction_id": r.id, "year": r.year, "month": r.month, "day": r.day, "merchant": r.merchant, "amount": r.amount, "category": r.name, "category_id": r.category_id} for r in query]
 
     return transactions if transactions else 0
+
+def update_transaction(db, user, transaction_id, new_ceategory_id):
+    transaction = db.query(Transaction).filter(Transaction.id == transaction_id).filter(Transaction.user_id == user.id).first()
+    if transaction:
+        transaction.category_id = new_ceategory_id
+        db.commit()
+        db.refresh(transaction)
+    else:
+        raise Exception("Transaction not found")
+    return {"message": "Transaction category updated successfully", "transaction": transaction}
 
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()

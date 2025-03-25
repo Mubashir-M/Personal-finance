@@ -5,5 +5,6 @@ export interface Transaction {
   month: number;
   year: number;
   category: string;
+  category_id: number | null;
   monthName?: string;
 }

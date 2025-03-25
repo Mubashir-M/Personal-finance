@@ -28,6 +28,25 @@
         </div>
         <div class="amount">
           <span class="category">{{ transaction.category }}</span>
+          <select
+            name="category"
+            id="category-select"
+            [(ngModel)]="transaction.category_id"
+            (ngModelChange)="onCategoryChange(transaction)"
+          >
+            <option value="">--Please choose an option--</option>
+            <option value="1">Transportation</option>
+            <option value="2">Other</option>
+            <option value="3">Groceries</option>
+            <option value="4">Pharmacy</option>
+            <option value="5">Food</option>
+            <option value="6">Finance</option>
+            <option value="7">Utilities</option>
+            <option value="8">Fitness</option>
+            <option value="9">Retail</option>
+            <option value="10">Healthcare</option>
+            <option value="11">Salary</option>
+          </select>
           <span
             class="amount-total"
             [ngClass]="{

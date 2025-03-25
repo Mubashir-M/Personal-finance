@@ -24,6 +24,11 @@ class UserResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class UpdateCategoryRequest(BaseModel):
+    category_id: int
+
+    class Config:
+        from_attributes = True
 
 # Transaction Schema
 class TransactionsCreate(BaseModel):

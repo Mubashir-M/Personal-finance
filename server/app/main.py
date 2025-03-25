@@ -45,6 +45,13 @@ def get_transactions(request: Request, token: Optional[str] = None, db: Session 
     user = verify_token(token)
     return crud.get_transactions_by_user(db, user)
 
+@app.put("/transaction/{transaction_id}")
+def update_Transaction(request: Request, transaction_id: int, update_request: schemas.UpdateCategoryRequest, token: Optional[str] = None, db: Session = Depends(get_db)):
+    if token is None:
+        token = request.headers.get("Authorization").split(" ")[1]
+    user = verify_token(token)
+    return crud.update_transaction(db, user, transaction_id, update_request.category_id)
+
 @app.get("/user", response_model=schemas.UserResponse)
 def get_user(request: Request, token: Optional[str] = None, db: Session = Depends(get_db)):
     if token is None:
