@@ -20,7 +20,7 @@ app = FastAPI()
 #CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:4200"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -33,7 +33,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     try:
         db_user = crud.create_user(db, user)
-        token = create_access_token(data={"sub": db_user.email})
+        token = create_access_token(data={"user_id": db_user.id, "username": db_user.username, "sub": db_user.email})
         return {"token": token, "token_type":"bearer"}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

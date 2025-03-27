@@ -9,6 +9,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ActivePageService } from '../services/activePageService';
 
 @Component({
   selector: 'app-sidebar',
@@ -17,16 +19,32 @@ import { Router } from '@angular/router';
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
-  activeDiv: string | null = null;
+  activeDiv: string = '';
   sidebarCollapsed: boolean = false;
+  private activePageSubscription: Subscription | null = null;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private activePageService: ActivePageService
   ) {}
 
   @Output() sidebarToggle = new EventEmitter<boolean>();
+
+  ngOnInit() {
+    this.activePageSubscription = this.activePageService.activePage$.subscribe(
+      (page) => {
+        this.activeDiv = page;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.activePageSubscription) {
+      this.activePageSubscription.unsubscribe();
+    }
+  }
 
   setActive(divName: string) {
     this.activeDiv = divName;

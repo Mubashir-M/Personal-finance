@@ -29,7 +29,9 @@ export class TransactionsComponent {
 
   filteredTransactions = computed(() => {
     const searchText = this.searchInputText().toLowerCase().trim();
-    return this.transactions().filter(
+    const transactionsList = this.transactions() || [];
+
+    return transactionsList.filter(
       (transaction) =>
         transaction.merchant.toLowerCase().includes(searchText) ||
         transaction.category.toLowerCase().includes(searchText) ||

@@ -55,6 +55,9 @@ export class AuthComponent {
           next: (response) => {
             console.log('Logged in:', response);
             this.authService.setLoggedIn(response.token);
+            this.email = '';
+            this.password = '';
+            this.username = '';
             this.router.navigate(['/']);
           },
           error: (error) => {

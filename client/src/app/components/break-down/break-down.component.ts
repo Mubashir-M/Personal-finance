@@ -52,6 +52,10 @@ export class BreakDownComponent {
   loadExpenses() {
     this.expenseService.getMonthlyExpenses().subscribe(
       (data: any) => {
+        if (!Array.isArray(data)) {
+          return;
+        }
+
         data = data.map((expense: { total: number }) => {
           expense.total = Math.abs(expense.total);
           return expense;

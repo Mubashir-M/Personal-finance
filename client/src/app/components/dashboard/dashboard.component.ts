@@ -103,6 +103,12 @@ export class DashboardComponent {
     const incomesGrouped: { [key: string]: number } = {};
     const incomeSources: { [key: string]: number } = {};
 
+    // Ensure transactions is an array
+    if (!Array.isArray(transactions())) {
+      console.warn('No transactions available.');
+      return;
+    }
+
     transactions().forEach((transaction: Transaction) => {
       const { amount, month, year, merchant } = transaction;
       const monthYear = `${this.expenseService.getMonthName(month)} ${year}`;

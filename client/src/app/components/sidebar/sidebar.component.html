@@ -48,14 +48,15 @@
       <p>Transactions</p>
     </div>
     <div
-      class="savings"
-      (click)="setActive('savings')"
-      [ngClass]="{ active: activeDiv === 'savings' }"
+      class="upload"
+      routerLink="/uploads"
+      (click)="setActive('upload')"
+      [ngClass]="{ active: activeDiv === 'upload' }"
     >
       <mat-icon>
-        <span class="material-symbols-outlined"> savings </span>
+        <span class="material-symbols-outlined"> upload_file </span>
       </mat-icon>
-      <p>Savings</p>
+      <p>Upload file(s)</p>
     </div>
     <div
       class="messages"
