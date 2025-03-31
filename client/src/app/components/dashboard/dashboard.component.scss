@@ -1,5 +1,5 @@
 .dashboard-container {
-  height: calc(100vh - 80px);
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-direction: row;
 }
@@ -14,6 +14,7 @@
 
 .left-greetings {
   padding-top: 10px;
+  margin-left: 10px;
   h2 {
     font-family: Plus Jakarta Sans;
     font-size: 21px;
@@ -22,29 +23,23 @@
   p {
     color: #969696;
     font-size: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 }
 
-.left-graphs {
-  overflow-y: auto;
-}
-.right {
-  flex-grow: 1;
-  max-width: 30%;
-}
-
 .left-top {
-  flex: 1;
   margin-top: 20px;
   margin-left: 10px;
 }
+
 .left-bottom {
   margin-left: 10px;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  max-height: 400px;
+  flex-grow: 1;
+  min-height: 0;
+  height: auto;
+  overflow: hidden;
   h3 {
     padding-bottom: 10px;
   }
@@ -59,12 +54,12 @@
 
 ul {
   border-top: 2px solid #f2f2f2;
-}
-.income-list {
   list-style: none;
   padding: 0;
   overflow-y: auto;
   margin-right: 20px;
+  flex-grow: 1;
+  height: 100%;
 }
 
 .income-list li {
@@ -94,8 +89,28 @@ span {
   font: bold;
 }
 
-@media (max-width: 900px) {
+.right {
+  flex-grow: 1;
+  max-width: 30%;
+}
+
+@media (max-width: 700px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+
+  .left {
+    max-width: 100%;
+    flex-grow: 0;
+  }
+
+  .right {
+    max-width: 100%;
+    flex-grow: 0;
+  }
+
   .left-bottom {
-    max-height: 450px;
+    max-height: 350px;
+    overflow-y: scroll;
   }
 }

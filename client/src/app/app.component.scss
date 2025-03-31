@@ -10,13 +10,17 @@ body {
   height: calc(100vh - 77px);
   gap: 10px;
   transition: 0.3s ease-in-out;
+  min-height: 100vh;
 }
-
+app-header {
+  height: 77px;
+}
 .content {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  transition: margin-left 0.3s ease-in-out;
+  transition: margin-left 0.2s ease-in-out;
+  min-height: 0;
 }
 
 .loading-spinner-placeholder {

@@ -68,7 +68,7 @@
   width: 50%;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 
   .category {
@@ -80,4 +80,74 @@
   .positive {
     color: #5cc47c;
   }
+}
+
+.amount-total {
+  padding-left: 7px;
+  padding-right: 10px;
+}
+
+select {
+  border: none;
+  border-radius: 20px;
+  text-align: center;
+  appearance: none;
+}
+
+.default-option {
+  color: gray;
+}
+
+.transportation {
+  background-color: red;
+  color: white; /* Optional: Adjust text color for better visibility */
+}
+
+.other {
+  background-color: blue;
+  color: white;
+}
+
+.groceries option {
+  background-color: green;
+  color: white;
+}
+
+.pharmacy {
+  background-color: purple;
+  color: white;
+}
+
+.food {
+  background-color: orange;
+  color: white;
+}
+
+.finance {
+  background-color: teal;
+  color: white;
+}
+
+.utilities {
+  background-color: brown;
+  color: white;
+}
+
+.fitness {
+  background-color: yellow;
+}
+
+.retail {
+  background-color: coral;
+  color: white;
+}
+
+.healthcare {
+  background-color: violet;
+  color: white;
+}
+
+.salary {
+  background-color: pink;
+  color: black;
 }

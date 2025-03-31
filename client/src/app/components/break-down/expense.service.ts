@@ -12,17 +12,6 @@ export class ExpenseService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
-  getTransactions(): Observable<any> {
-    const token = this.tokenService.getToken();
-    if (!token) {
-      throw new Error('No token found.');
-    }
-
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    return this.http.get(`${this.apiUrl}/Transactions`, { headers });
-  }
-
   getMonthlyExpenses(): Observable<any> {
     const token = this.tokenService.getToken();
 
@@ -33,26 +22,6 @@ export class ExpenseService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     return this.http.get(`${this.apiUrl}/expenses/monthly-total`, { headers });
-  }
-
-  getMonthlyIncomes(): Observable<any> {
-    const token = this.tokenService.getToken();
-    if (!token) {
-      throw new Error('No token found.');
-    }
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    return this.http.get(`${this.apiUrl}/incomes/monthly-total`, { headers });
-  }
-
-  getMonthlyIncomesBySources(): Observable<any> {
-    const token = this.tokenService.getToken();
-    if (!token) {
-      throw new Error('No token found.');
-    }
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    return this.http.get(`${this.apiUrl}/incomes`, { headers });
   }
 
   getMonthlyCategoziredExpenses(year: number, month: number): Observable<any> {

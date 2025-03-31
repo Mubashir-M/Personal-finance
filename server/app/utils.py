@@ -69,14 +69,6 @@ def get_db():
     finally:
         db.close()
 
-def get_current_user(db: Session = Depends(get_db)):
-    # Fetch the first user from the database (for testing purposes), update it to fetch correct user
-    user = db.query(User).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="No user found in database")
-    
-    return {"id": user.id, "username": user.username}
-
 def verify_token(token: str) -> UserResponse:
     try:
         # Decode the token

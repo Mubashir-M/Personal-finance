@@ -33,18 +33,20 @@
             [(ngModel)]="transaction.category_id"
             (ngModelChange)="onCategoryChange(transaction)"
           >
-            <option value="">--Please choose an option--</option>
-            <option value="1">Transportation</option>
-            <option value="2">Other</option>
-            <option value="3">Groceries</option>
-            <option value="4">Pharmacy</option>
-            <option value="5">Food</option>
-            <option value="6">Finance</option>
-            <option value="7">Utilities</option>
-            <option value="8">Fitness</option>
-            <option value="9">Retail</option>
-            <option value="10">Healthcare</option>
-            <option value="11">Salary</option>
+            <option value="" class="default-option">
+              --Please choose an option--
+            </option>
+            <option value="1" class="transportation">Transportation</option>
+            <option value="2" class="other">Other</option>
+            <option value="3" class="groceries">Groceries</option>
+            <option value="4" class="pharmacy">Pharmacy</option>
+            <option value="5" class="food">Food</option>
+            <option value="6" class="finance">Finance</option>
+            <option value="7" class="utilities">Utilities</option>
+            <option value="8" class="fitness">Fitness</option>
+            <option value="9" class="retail">Retail</option>
+            <option value="10" class="healthcare">Healthcare</option>
+            <option value="11" class="salary">Salary</option>
           </select>
           <span
             class="amount-total"
@@ -63,9 +65,3 @@
     </ng-template>
   </div>
 </div>
-
-<!--
-1. Fetch transactions seperately from API with categories
-2. Add a function to change transactions manually.
-3. Add search functionality with search bar next to history-header
--->

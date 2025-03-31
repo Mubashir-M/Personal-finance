@@ -9,7 +9,7 @@ from app.models import Base
 import app.schemas as schemas
 import app.crud as crud
 from app.tasks import process_transactions_task
-from app.utils import translate_columns, process_and_save_transactions, get_current_user, get_db, verify_password, create_access_token, verify_token
+from app.utils import translate_columns, process_and_save_transactions, get_db, verify_password, create_access_token, verify_token
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 models.Base.metadata.create_all(bind=engine)
@@ -72,20 +72,6 @@ def get_monthly_categories(request: Request, year:int, month:int, token: Optiona
         token = request.headers.get("Authorization").split(" ")[1]
     user = verify_token(token)
     return crud.get_monthly_categorized_expenses_by_user(db, user, year, month)
-
-@app.get("/incomes/monthly-total")
-def get_monthly_total_income(request: Request, token: Optional[str] = None, db: Session = Depends(get_db)):
-    if token is None:
-        token = request.headers.get("Authorization").split(" ")[1]
-    user = verify_token(token)
-    return crud.get_monthly_total_income_by_user(db, user)
-
-@app.get("/incomes")
-def get_incomes(request: Request, token: Optional[str] = None, db: Session = Depends(get_db)):
-    if token is None:
-        token = request.headers.get("Authorization").split(" ")[1]
-    user = verify_token(token)
-    return crud.get_monthly_incomes_by_user(db, user)
 
 @app.post("/login", response_model=schemas.Token)
 def login(user: schemas.UserLogin, db : Session = Depends(get_db)):

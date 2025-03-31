@@ -149,51 +149,6 @@ def get_monthly_categorized_expenses_by_user(db, user, year, month):
 
     return jsonable_encoder(result) if result else 0
 
-def get_monthly_total_income_by_user(db, user):
-    query = db.query(func.extract('year', Transaction.date).label('year'),
-                              func.extract('month', Transaction.date).label('month'),
-                              func.sum(Transaction.amount).label('total')) \
-    .filter(Transaction.user_id == user.id) \
-    .filter(Transaction.amount > 0) \
-        
-    query = query.group_by('year','month')
-    result = query.all()
-
-    result = [{"year": r.year, "month": r.month, "total": r.total} for r in result]
-    result = sorted(result, key = lambda income: (income["year"], income['month']), reverse=True)
-
-    return  result if result else 0
-
-def get_monthly_incomes_by_user(db, user):
-    query = (
-        db.query(
-            func.extract('year', Transaction.date).label('year'),
-            func.extract('month', Transaction.date).label('month'),
-            Transaction.merchant.label('income_source'),
-            func.sum(Transaction.amount).label('total_income')
-        )
-        .filter(Transaction.user_id == user.id)
-        .filter(Transaction.amount > 0)
-        .group_by('year', 'month', Transaction.merchant)
-        .order_by('year', 'month')
-        .all()
-    )
-
-    result = [{'year': r.year, 'month': r.month, 'income_source': r.income_source, 'total_income': r.total_income} for r in query]
-    return result if result else 0
-
-def get_or_create_category(db, category_name):
-    """Fetch or create a category based on AI prediction."""
-    category = db.query(Category).filter_by(name=category_name).first()
-    
-    if not category:
-        category = Category(name=category_name)
-        db.add(category)
-        db.commit()
-        db.refresh(category)
-    
-    return category.id
-
 def process_transactions(db, transaction_ids):
     """
     Fetch transactions, predict categories, and update database.

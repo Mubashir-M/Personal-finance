@@ -1,14 +1,14 @@
 .header-container {
+  min-height: 70px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 13px 10px;
   border-bottom: 1px solid rgba(150, 150, 150, 0.2);
   justify-content: space-between;
 }
 
 .logo-container {
-  flex-shrink: 0; // Prevent shrinking
+  flex-shrink: 0;
   display: flex;
   justify-content: flex-start;
   padding: 5px 0;
@@ -22,13 +22,13 @@
   flex-grow: 2;
   position: relative;
   margin-left: 30px;
+  min-width: 200px;
 
   input {
     border: none;
-    min-width: 200px; // Ensure consistent width
-    padding: 7px 0 5px 15px;
+    min-width: 200px;
+    padding: 7px 0 5px 30px;
     text-align: center;
-    padding-left: 30px;
     box-sizing: border-box;
   }
 
@@ -42,15 +42,15 @@
 
   mat-icon {
     position: absolute;
-    left: 8px; // Adjust for better alignment
+    left: 8px;
     top: 50%;
     transform: translateY(-50%);
-    padding: 0; // Remove padding
+    padding: 0;
   }
 }
 
 .user-nav-container {
-  flex-shrink: 0; // Prevent shrinking
+  flex-shrink: 0;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -89,4 +89,10 @@
     background-color: rgb(151, 113, 233);
     color: lightgray;
   }
+}
+
+.header-logo,
+.avatar {
+  width: 40px;
+  height: 40px;
 }
