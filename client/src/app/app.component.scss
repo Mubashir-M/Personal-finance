@@ -4,23 +4,22 @@ body {
   flex-direction: column;
 }
 
+app-header {
+  height: 70px;
+}
+
 .body-container {
   display: flex;
   flex-direction: row;
   height: calc(100vh - 77px);
-  gap: 10px;
   transition: 0.3s ease-in-out;
-  min-height: 100vh;
-}
-app-header {
-  height: 77px;
 }
 .content {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  height: calc(100vh - 77px);
   transition: margin-left 0.2s ease-in-out;
-  min-height: 0;
 }
 
 .loading-spinner-placeholder {

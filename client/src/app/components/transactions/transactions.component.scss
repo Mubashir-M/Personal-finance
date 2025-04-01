@@ -43,37 +43,38 @@
 .transactions-container {
   flex-grow: 1;
   overflow-y: auto;
-}
-.transactions {
-  list-style: none;
-  padding: 0;
   border-top: 2px solid #f2f2f2;
+  width: 100%;
 }
 
-.transaction-detail {
-  display: flex;
-  flex-direction: column;
+.transactions {
+  margin-top: 5px;
+  width: 100%;
 }
-.transactions li {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  cursor: pointer;
-  &:hover {
-    background: #f2f2f2;
-  }
+table {
+  border-collapse: collapse;
 }
-
+.date-header {
+  border-top-left-radius: 10px;
+}
+tbody {
+  background-color: #f2f2f2;
+}
+tbody tr:nth-child(odd) {
+  background-color: white;
+}
+thead {
+  background-color: #5735d2;
+  color: white;
+  padding: 3px;
+  margin: 0;
+  padding: 0;
+}
+td {
+  text-align: center;
+  padding: 5px 0 5px 0;
+}
 .amount {
-  width: 50%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  .category {
-    padding-right: 3rem;
-  }
   .negative {
     color: red;
   }
@@ -89,65 +90,12 @@
 
 select {
   border: none;
-  border-radius: 20px;
+  background: transparent;
   text-align: center;
   appearance: none;
-}
-
-.default-option {
-  color: gray;
-}
-
-.transportation {
-  background-color: red;
-  color: white; /* Optional: Adjust text color for better visibility */
-}
-
-.other {
-  background-color: blue;
-  color: white;
-}
-
-.groceries option {
-  background-color: green;
-  color: white;
-}
-
-.pharmacy {
-  background-color: purple;
-  color: white;
-}
-
-.food {
-  background-color: orange;
-  color: white;
-}
-
-.finance {
-  background-color: teal;
-  color: white;
-}
-
-.utilities {
-  background-color: brown;
-  color: white;
-}
-
-.fitness {
-  background-color: yellow;
-}
-
-.retail {
-  background-color: coral;
-  color: white;
-}
-
-.healthcare {
-  background-color: violet;
-  color: white;
-}
-
-.salary {
-  background-color: pink;
-  color: black;
+  cursor: pointer;
+  &:hover {
+    color: white;
+    background-color: #5735d2;
+  }
 }

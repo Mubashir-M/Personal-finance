@@ -13,53 +13,56 @@
     </div>
   </div>
   <div class="transactions-container">
-    <ul
-      class="transactions"
-      *ngIf="filteredTransactions().length > 0; else noData"
-    >
-      <li *ngFor="let transaction of filteredTransactions()">
-        <div class="transaction-detail">
-          <span class="merchant">
-            {{ transaction.merchant }}
-          </span>
-          <span class="date">
-            {{ transaction.month }}.{{ transaction.year }}
-          </span>
-        </div>
-        <div class="amount">
-          <select
-            name="category"
-            id="category-select"
-            [(ngModel)]="transaction.category_id"
-            (ngModelChange)="onCategoryChange(transaction)"
-          >
-            <option value="" class="default-option">
-              --Please choose an option--
-            </option>
-            <option value="1" class="transportation">Transportation</option>
-            <option value="2" class="other">Other</option>
-            <option value="3" class="groceries">Groceries</option>
-            <option value="4" class="pharmacy">Pharmacy</option>
-            <option value="5" class="food">Food</option>
-            <option value="6" class="finance">Finance</option>
-            <option value="7" class="utilities">Utilities</option>
-            <option value="8" class="fitness">Fitness</option>
-            <option value="9" class="retail">Retail</option>
-            <option value="10" class="healthcare">Healthcare</option>
-            <option value="11" class="salary">Salary</option>
-          </select>
-          <span
-            class="amount-total"
-            [ngClass]="{
-              negative: transaction.amount < 0,
-              positive: transaction.amount > 0
-            }"
-          >
-            €{{ transaction.amount }}</span
-          >
-        </div>
-      </li>
-    </ul>
+    <table class="transactions">
+      <thead>
+        <tr>
+          <th class="date-header">Date</th>
+          <th>Merchant</th>
+          <th>Category</th>
+          <th>Amount (€)</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="filteredTransactions().length > 0; else noData">
+        <tr *ngFor="let transaction of filteredTransactions()">
+          <td class="date">{{ transaction.month }}.{{ transaction.year }}</td>
+          <td class="merchant">{{ transaction.merchant }}</td>
+          <td class="category">
+            <select
+              name="category"
+              id="category-select"
+              [(ngModel)]="transaction.category_id"
+              (ngModelChange)="onCategoryChange(transaction)"
+            >
+              <option value="" class="default-option">
+                --Please choose an option--
+              </option>
+              <option value="1" class="transportation">Transportation</option>
+              <option value="2" class="other">Other</option>
+              <option value="3" class="groceries">Groceries</option>
+              <option value="4" class="pharmacy">Pharmacy</option>
+              <option value="5" class="food">Food</option>
+              <option value="6" class="finance">Finance</option>
+              <option value="7" class="utilities">Utilities</option>
+              <option value="8" class="fitness">Fitness</option>
+              <option value="9" class="retail">Retail</option>
+              <option value="10" class="healthcare">Healthcare</option>
+              <option value="11" class="salary">Salary</option>
+            </select>
+          </td>
+          <td class="amount">
+            <span
+              class="amount-total"
+              [ngClass]="{
+                negative: transaction.amount < 0,
+                positive: transaction.amount > 0
+              }"
+            >
+              {{ transaction.amount }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
     <ng-template #noData>
       <p>No transactions available.</p>
     </ng-template>

@@ -1,5 +1,5 @@
 .dashboard-container {
-  min-height: calc(100vh - 80px);
+  height: calc(100vh - 80px);
   display: flex;
   flex-direction: row;
 }
@@ -10,6 +10,7 @@
   display: flex;
   flex-direction: column;
   max-width: 70%;
+  height: 100%;
 }
 
 .left-greetings {
@@ -37,9 +38,9 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  overflow-y: scroll;
   min-height: 0;
-  height: auto;
-  overflow: hidden;
+
   h3 {
     padding-bottom: 10px;
   }
@@ -56,10 +57,10 @@ ul {
   border-top: 2px solid #f2f2f2;
   list-style: none;
   padding: 0;
-  overflow-y: auto;
   margin-right: 20px;
   flex-grow: 1;
   height: 100%;
+  overflow-y: scroll;
 }
 
 .income-list li {
