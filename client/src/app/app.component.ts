@@ -52,6 +52,7 @@ export class AppComponent {
         });
       });
     }
+    console.log('is loading:', this.isLoading);
   }
 
   onSidebarToggle(collapsed: boolean) {

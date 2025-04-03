@@ -55,7 +55,6 @@ export class BreakDownComponent {
         if (!Array.isArray(data)) {
           return;
         }
-
         data = data.map((expense: { total: number }) => {
           expense.total = Math.abs(expense.total);
           return expense;
@@ -87,7 +86,7 @@ export class BreakDownComponent {
     // Proceed only if year and month are valid
     if (year && month) {
       this.expenseService.getMonthlyCategoziredExpenses(year, month).subscribe({
-        next: (response) => {
+        next: (response: any) => {
           this.monthlyCategorized =
             this.expenseDataTransformer.mapMonthlyCategorizedExpenses(response);
           this.updateCustomColors();
@@ -140,7 +139,6 @@ export class BreakDownComponent {
   }
 
   onBarClick(event: any) {
-    console.log('Clicked on bar: ', event);
     this.selectedBar = event.name;
 
     // Find corresponding year and month

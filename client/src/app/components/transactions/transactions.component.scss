@@ -1,7 +1,10 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: calc((100vh - 80px));
+  height: calc((100vh - 77px));
+  width: 100%;
+  min-height: 200px;
+  padding: 20px;
 }
 
 .top {
@@ -12,7 +15,6 @@
 }
 
 .search-bar {
-  padding-right: 35%;
   input {
     min-width: 200px;
     min-height: 20px;
@@ -53,6 +55,14 @@
 }
 table {
   border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+th,
+td {
+  width: 25%;
+  text-align: center;
+  padding: 5px;
 }
 .date-header {
   border-top-left-radius: 10px;

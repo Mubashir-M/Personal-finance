@@ -53,9 +53,10 @@ def get_transactions_by_user(db, user):
                               Category.name) \
     .outerjoin(Category, Transaction.category_id == Category.id) \
     .filter(Transaction.user_id == user.id) \
+    .order_by(Transaction.date.desc()) \
     .all()
-    transactions = [{"transaction_id": r.id, "year": r.year, "month": r.month, "day": r.day, "merchant": r.merchant, "amount": r.amount, "category": r.name, "category_id": r.category_id} for r in query]
 
+    transactions = [{"transaction_id": r.id, "year": r.year, "month": r.month, "day": r.day, "merchant": r.merchant, "amount": r.amount, "category": r.name, "category_id": r.category_id} for r in query]
     return transactions if transactions else 0
 
 def update_transaction(db, user, transaction_id, new_ceategory_id):
@@ -148,6 +149,18 @@ def get_monthly_categorized_expenses_by_user(db, user, year, month):
 
 
     return jsonable_encoder(result) if result else 0
+
+def get_or_create_category(db, category_name):
+     """Fetch or create a category based on AI prediction."""
+     category = db.query(Category).filter_by(name=category_name).first()
+     
+     if not category:
+         category = Category(name=category_name)
+         db.add(category)
+         db.commit()
+         db.refresh(category)
+     
+     return category.id
 
 def process_transactions(db, transaction_ids):
     """
