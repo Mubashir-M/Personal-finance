@@ -3,7 +3,8 @@ start:
 	brew services start redis
 	source myenv/bin/activate && export $(grep -v '^#' .env | xargs) && \
 	celery -A app.tasks worker --loglevel=info --pool=solo & \
-	uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+	uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload & \
+	cd ../client && ng serve --open
 
 stop:
 	brew services stop postgresql@14
